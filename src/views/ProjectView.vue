@@ -1,8 +1,9 @@
 <script setup>
+import {ref } from 'vue';
 
 const editingProject = ref(null);
 
-import {ref } from 'vue';
+
     
     let pageTitle = ref("Учет рабочего времени - Проекты");
     let projects = ref([]);
