@@ -7,21 +7,6 @@ import {ref } from 'vue';
     let pageTitle = ref("Учет рабочего времени - Проекты");
     let projects = ref([]);
 
-
-    const deleteProjects = async (id) => {
-        try{
-            const response = await fetch(`http://localhost:5268/api/project/${id}`,{
-                method: 'DELETE'
-            });
-            if(!response.ok){throw new Error(`Http ${response.status}`)};
-            projects.value = projects.value.filter(p => p.id !== id);
-            console.log("Проект удален")
-
-        }
-        catch(error){
-            console.log("Ошибка:", error.message);
-        }
-    }
     const loadProjects = async () =>{
 try{
 
@@ -90,6 +75,20 @@ catch(error){
             catch(error){
                 console.log("Ошибка:", error.message);
             }
+    }
+    const deleteProjects = async (id) => {
+        try{
+            const response = await fetch(`http://localhost:5268/api/project/${id}`,{
+                method: 'DELETE'
+            });
+            if(!response.ok){throw new Error(`Http ${response.status}`)};
+            projects.value = projects.value.filter(p => p.id !== id);
+            console.log("Проект удален")
+
+        }
+        catch(error){
+            console.log("Ошибка:", error.message);
+        }
     }
 loadProjects();
     
