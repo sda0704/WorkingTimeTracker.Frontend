@@ -65,7 +65,7 @@ const updateTask = async () => {
             tasks.value[index] = {...editingTask.value};
         }
         editingTask.value = null;
-        console.log("Проект обновлен");
+        console.log("Задача обновлена");
     }
     catch(error){
         console.log("Ошибка:", error.message);
@@ -79,7 +79,7 @@ const deleteTask = async(id) => {
         });
          if(!response.ok) {throw new Error(`HTTP ${response.status}`)};
         tasks.value = tasks.value.filter(p => p.id !== id);
-        console.log("Проект удален");
+        console.log("Задача удалена");
 
     }
     catch(error){

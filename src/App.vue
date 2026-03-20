@@ -5,48 +5,112 @@
 
 <template>
 <div>
-  <nav class="sidebar">
-    <h2>Меню</h2>
+   <div class="header">
+
+<img src="/images/timer-with-red-colour_78370-7250.jpg" alt="" class="header-logo">
+<p class="header-text">Учет рабочего времени</p>
+
+    </div>
+    <div class="main-part">
+
+    <!-- <h2>Меню</h2>
    <router-link to="/projects" class="nav-link">Проекты</router-link>
    <router-link to="/tasks" class="nav-link">Задачи</router-link>
-   <router-link to="/timeentry" class="nav-link" >Проводки</router-link>
-  </nav>
-
+   <router-link to="/timeentry" class="nav-link" >Проводки</router-link> -->
+   
+   <div class="aside">
+        <div class="btn-wrapper-aside">
+           
+      <router-link to="/projects" class="aside-btn"> <img src="/images/dashboard.svg" alt="" class="aside-logo">Дашборд</router-link>
+        </div>
+              <div class="btn-wrapper-aside">
+         <router-link  to="/projects" class="aside-btn"> <img src="/images/projects.svg" alt="" class="aside-logo">Проекты</router-link>
+        </div>
+              <div class="btn-wrapper-aside">
+         <router-link  to="/tasks" class="aside-btn"> <img src="/images/tasks.svg" alt="" class="aside-logo">Задачи</router-link>
+        </div>
+              <div class="btn-wrapper-aside">
+        <router-link to="/timeentry" class="aside-btn"><img src="/images/time.svg" alt="" class="aside-logo">Учет времени</router-link>
+        </div>
+        
+    </div>
   <main class="content">
     <RouterView />
+    
   </main>
+  </div>
+
 </div>
 </template>
 
 <style scoped>
 
-.app{
-  display: flex;
-  height: 100hv;
+.main-part{
+  display:flex;
 }
-.sidebar{
-  width: 200px;
-  background: #f0f0f0;
-  padding: 20px;
+.header{
+    height: 60px;
+    border-bottom: 1px solid lightgray;
+    display: flex;
+    align-items: center;
 }
-.nav-link{
-  display: block;
-  margin: 10px 0;
-  padding: 10px;
-  color: #333;
-  text-decoration: none;
-  border-radius: 4px;
+.header-logo{
+    height: 60px;
+    width: 60px;
 }
-.nav-link:hover{
-  background: #ddd;
+.header-text{
+    font-size: 20px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: bold;
+}   
+.aside{
+    width: 300px;
+    height: 1000px;
+    border-right: 1px solid lightgray;
+    align-items: center;
+    display: block;
+    text-align: center; 
 }
-.nav-link.router-link-active{
-  background: #007bff;
-  color: white;
+
+.aside-btn{
+    width: 250px;
+    height: 40px;
+    border: 0;
+    border-radius: 10px;
+    font-size: 18px;
+    padding-left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    color: black;
+    text-decoration: none;
+   
+    margin-top: 8px;
+    text-align: left;
+    font-weight: bold;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: white;
+    cursor: pointer;
+     transition: background-color 0.3s;
+     
 }
-.content{
-  flex: 1;
-  padding: 20px;
+.aside-btn:hover{
+    background-color: lightgray;
 }
+.aside-logo{
+    width: 30px;
+    height: 30px;
+    
+}
+.btn-wrapper-aside:first-child{
+    padding-top: 30px;
+}
+.btn-wrapper-aside{
+    display: flex;
+    align-items: center ;
+    justify-content: center;
+}
+
 
 </style>
