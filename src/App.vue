@@ -64,7 +64,7 @@
     font-weight: bold;
 }   
 .aside{
-    width: 300px;
+   
     height: 1000px;
     border-right: 1px solid lightgray;
     align-items: center;
@@ -73,7 +73,7 @@
 }
 
 .aside-btn{
-    width: 250px;
+    width: 300px;
     height: 40px;
     border: 0;
     border-radius: 10px;
@@ -96,7 +96,7 @@
      
 }
 .aside-btn:hover{
-    background-color: lightgray;
+    background-color: rgb(246, 138, 138);
 }
 .aside-logo{
     width: 30px;
@@ -107,6 +107,7 @@
     padding-top: 30px;
 }
 .btn-wrapper-aside{
+    width: 90%;
     display: flex;
     align-items: center ;
     justify-content: center;

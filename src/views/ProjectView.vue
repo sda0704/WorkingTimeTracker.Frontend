@@ -161,17 +161,18 @@ loadProjects();
 
 <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
     <div class="modal">
-        <h2>{{ modalMode === 'create' ? 'Создать проект' : 'Редактировать проект' }}</h2>
+        <h3 class="modal-title">{{ modalMode === 'create' ? 'Создать проект' : 'Редактировать проект' }}</h3>
 
-        <input v-model="formData.title" placeholder="Название">
-        <input v-model="formData.code" placeholder="Код">
-        <label for="" class="switch">
-            <input type="checkbox"  v-model="formData.isActive"  name="" id="">Активен
-            <span class="slider round"></span>
-        </label>
+        <input v-model="formData.title" placeholder="Название" class="modal-input">
+        <input v-model="formData.code" placeholder="Код" class="modal-input">
+    <label class="switch">
+        <input class="checkbox" type="checkbox" v-model="formData.isActive">
+        <span class="slider"></span>
+        
+    </label>
         <div class="modal-buttons">
-            <button @click="saveProject()">Сохранить</button>
-            <button @click="showModal = false">Отменить</button>
+            <button @click="showModal = false" class="modal-button">Отменить</button>
+            <button @click="saveProject()" class="modal-button">Сохранить</button>
         </div>
     </div>
 </div>
@@ -206,6 +207,56 @@ to{
     opacity: 1;
     transform: translateY(0);
 }
+
+}
+.modal-button{
+    border: 0;
+    width: 90px;
+    height: 40px;
+    border: 1px solid lightgray;
+    background-color: inherit;
+    border-radius: 10px;
+    font-weight: bold;
+      transition: background-color 0.3s;
+}
+.modal-button:hover{
+    background-color: lightgray;
+}
+.modal-button:hover:last-child{
+    background-color: #1e1d1d;
+}
+
+.modal-button:last-child{
+    background-color: black;
+    color: white;
+}
+.modal-buttons{
+    display:flex;
+   justify-content: flex-end;
+   gap: 10px;
+    padding: 10px;
+}
+.modal-title{
+    padding-left: 15px;
+    padding-top: 20px;
+
+}
+.modal-input{
+    display: flex;
+    height: 40px;
+    
+    background-color: lightgray;
+    border-radius: 10px;
+    padding-left: 20px;
+    margin-bottom: 10px;
+    width: 90%;
+    border: 0;
+    margin-left: 15px;
+     outline: 2px solid transparent; 
+  transition: outline-color 0.3s ease;
+}
+.modal-input:focus{
+    outline-color:  gray;
 }
 .modal-overlay{
   
@@ -219,6 +270,55 @@ to{
     justify-content: center;
     align-items: center;
 }
+
+.switch{
+    
+    position: relative;
+    display: inline-block;
+    width:50px;
+    height: 24px;
+    margin-left: 15px;
+    margin-bottom: 10px;
+} 
+
+.switch input{
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider{
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.3s;
+    border-radius: 34px;
+}
+
+.slider:before{
+    position: absolute;
+    content: "";
+    height:15px;
+    width: 15px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+}
+
+input:checked + .slider{
+    background-color: rgb(246, 138, 138);
+
+}
+input:checked + .slider:before{
+    transform: translateX(26px);
+}
+
 .page-title{
     display: flex;
     align-items: center;
@@ -238,6 +338,7 @@ to{
 
 .table{
     display: grid;
+  
     grid-template-columns:800px 300px 300px 300px;
     border-bottom: 1px solid lightgray;
 
@@ -252,6 +353,7 @@ to{
 }
 .projects-items{
       display: grid;
+      margin-top: 10px;
     grid-template-columns:800px 300px 300px 30px 30px;
     border-bottom: 1px solid #f5f5f5;
 }
@@ -283,7 +385,7 @@ h1{
 
 .projects-list{
     border: 2px solid lightgray;
-    width:1500px;
+    width: 100%;
     margin-left: 30px;
     border-radius: 20px;
    height: 100%;
