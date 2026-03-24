@@ -3,6 +3,7 @@ import {ref } from 'vue';
 
 
 
+
 const showModal = ref(false);
 const modalMode = ref('create');
 const formData = ref({
@@ -45,7 +46,7 @@ const saveProject = async () => {
 try{
 
 
-    const response = await fetch("http://localhost:5268/api/project");
+    const response = await fetch("https://localhost:7222/api/project");
     if(!response.ok){throw new Error(`HTTP ${response.status}`)};
     let data = await response.json();
     projects.value = data
@@ -60,7 +61,7 @@ catch(error){
     const createProjects = async (data) => {
         try{
             
-            const response = await fetch("http://localhost:5268/api/project", {
+            const response = await fetch("https://localhost:7222/api/project", {
                 method: 'POST',
                 headers: {
                     'Content-Type': "application/json"
@@ -90,7 +91,7 @@ catch(error){
     const updateProject = async(id, data) => {
         
         try{  
-        const response = await fetch(`http://localhost:5268/api/project/${id}`, {
+        const response = await fetch(`https://localhost:7222/api/project/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': "application/json"
@@ -111,7 +112,7 @@ catch(error){
     }
     const deleteProjects = async (id) => {
         try{
-            const response = await fetch(`http://localhost:5268/api/project/${id}`,{
+            const response = await fetch(`https://localhost:7222/api/project/${id}`,{
                 method: 'DELETE'
             });
             if(!response.ok){throw new Error(`Http ${response.status}`)};
@@ -193,7 +194,7 @@ loadProjects();
     border-radius: 8px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     max-width: 500px;
-    max-height: 300px;
+    max-height: 270px;
     height: 100%;
     width: 90%;
     position: relative;
@@ -218,6 +219,7 @@ to{
     border-radius: 10px;
     font-weight: bold;
       transition: background-color 0.3s;
+
 }
 .modal-button:hover{
     background-color: lightgray;
@@ -322,10 +324,11 @@ input:checked + .slider:before{
 .page-title{
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 
 .title-btn{
-    margin-left: 1170px;
+   
     width: 200px;
     background-color: black;
     border: 0;
@@ -339,7 +342,7 @@ input:checked + .slider:before{
 .table{
     display: grid;
   
-    grid-template-columns:800px 300px 300px 300px;
+    grid-template-columns:  800px  300px  300px 300px;
     border-bottom: 1px solid lightgray;
 
 }
@@ -354,7 +357,7 @@ input:checked + .slider:before{
 .projects-items{
       display: grid;
       margin-top: 10px;
-    grid-template-columns:800px 300px 300px 30px 30px;
+    grid-template-columns:800px  300px  300px  30px 30px;
     border-bottom: 1px solid #f5f5f5;
 }
 .project-text:first-child{
@@ -363,6 +366,8 @@ input:checked + .slider:before{
 .table-text:first-child{
     margin-left: 30px;
 }
+
+
 h1{
     margin-left: 30px;
 }
@@ -385,7 +390,7 @@ h1{
 
 .projects-list{
     border: 2px solid lightgray;
-    width: 100%;
+    max-width: 1500px ;
     margin-left: 30px;
     border-radius: 20px;
    height: 100%;

@@ -12,12 +12,12 @@ import {ref} from 'vue';
     const dailySummary = ref(null);
 
     const loadTasks = async () => {
-        const response = await fetch("http://localhost:5268/api/tasks");
+        const response = await fetch("https://localhost:7222/api/tasks");
         tasks.value = await response.json()
         }
     loadTasks();
     const loadProjects = async () => {
-        const response = await fetch("http://localhost:5268/api/project");
+        const response = await fetch("https://localhost:7222/api/project");
         projects.value = await response.json();
     }
     loadProjects();
@@ -34,7 +34,7 @@ import {ref} from 'vue';
 
     const loadTimeEntry = async () => {
         try{
-            const response = await fetch("http://localhost:5268/api/timeentry");
+            const response = await fetch("https://localhost:7222/api/timeentry");
             if(!response.ok){throw new Error(`HTTP ${response.status}`)};
             let data = await response.json();
             timeEntries.value = data;
@@ -48,7 +48,7 @@ import {ref} from 'vue';
 
     const loadDailySummary = async() => {
         try {
-            const response = await fetch(`http://localhost:5268/api/timeentry/summary/daily?date=${selectedDate.value}`)
+            const response = await fetch(`https://localhost:7222/api/timeentry/summary/daily?date=${selectedDate.value}`)
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             dailySummary.value = await response.json();
         }
@@ -68,7 +68,7 @@ import {ref} from 'vue';
     })
     const createTimeEntry = async ()=>{
         try{
-            const response = await fetch("http://localhost:5268/api/timeentry", {
+            const response = await fetch("https://localhost:7222/api/timeentry", {
                 method: 'POST',
                 headers: {
                     'Content-Type': "application/json"
@@ -103,7 +103,7 @@ import {ref} from 'vue';
 
     const updateTimeEntry = async() => {
         try{
-            const response = await fetch(`http://localhost:5268/api/timeentry/${editingTimeEntry.value.id}`,{
+            const response = await fetch(`https://localhost:7222/api/timeentry/${editingTimeEntry.value.id}`,{
                 method: 'PUT',
                 headers: {
                     'Content-Type': "application/json"
@@ -126,7 +126,7 @@ import {ref} from 'vue';
     }
     const deleteTimeEntry = async (id) => {
         try{
-            const response = await fetch(`http://localhost:5268/api/timeentry/${id}`, {
+            const response = await fetch(`https://localhost:7222/api/timeentry/${id}`, {
                 method: 'DELETE'
             });
               if(!response.ok){throw new Error(`HTTP ${response.status}`)};
