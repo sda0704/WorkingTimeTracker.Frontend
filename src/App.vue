@@ -13,15 +13,11 @@
     </div>
     <div class="main-part">
 
-    <!-- <h2>Меню</h2>
-   <router-link to="/projects" class="nav-link">Проекты</router-link>
-   <router-link to="/tasks" class="nav-link">Задачи</router-link>
-   <router-link to="/timeentry" class="nav-link" >Проводки</router-link> -->
    
    <div class="aside">
         <div class="btn-wrapper-aside">
            
-      <router-link to="/projects" class="aside-btn"> <img src="/images/dashboard.svg" alt="" class="aside-logo">Дашборд</router-link>
+      <router-link to="/dashboard" class="aside-btn"> <img src="/images/dashboard.svg" alt="" class="aside-logo">Дашборд</router-link>
         </div>
               <div class="btn-wrapper-aside">
          <router-link  to="/projects" class="aside-btn"> <img src="/images/projects.svg" alt="" class="aside-logo">Проекты</router-link>
@@ -45,6 +41,13 @@
 
 <style scoped>
 
+@font-face{
+    font-family: "Comfortaa";
+    src: local("Comfortaa-Regular"),
+    url(/src/fonts/Comfortaa/Comfortaa-Regular.ttf) format("ttf");
+    font-weight: normal;
+}
+
 .main-part{
   display:flex;
 }
@@ -60,7 +63,7 @@
 }
 .header-text{
     font-size: 20px;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: "Comfortaa" sans-serif;
     font-weight: bold;
 }   
 .aside{
@@ -70,6 +73,7 @@
     align-items: center;
     display: block;
     text-align: center; 
+    
 }
 
 .aside-btn{
@@ -82,14 +86,14 @@
     display: flex;
     align-items: center;
     gap: 8px;
-
+    
     color: black;
     text-decoration: none;
    
     margin-top: 8px;
     text-align: left;
     font-weight: bold;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+       font-family: "Comfortaa" sans-serif;
     background-color: white;
     cursor: pointer;
      transition: background-color 0.3s;

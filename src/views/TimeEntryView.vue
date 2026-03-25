@@ -1,11 +1,57 @@
 <script setup> 
+
 import {ref} from 'vue';
+
+
+
+    const showModal = ref(false);
+    const modalMode = ref('create');
+    const formData = ref({
+        date: '',
+        taskId: '',
+        description: '',
+        hours: ''
+    });
+    const editingId = ref(null);
+
+    const openCreateModal =() => {
+        modalMode.value = 'create';
+        formData.value = {  date: '',
+        taskId: '',
+        description: '',
+        hours: ''}
+        editingId.value = null;
+        showModal.value = true;
+    }
+
+    const openEditModal = (timeEntry) => {
+        modalMode.value = 'edit';
+        formData.value = {...timeEntry};
+        editingId.value = timeEntry.id;
+        showModal.value = true;
+    }
+
 
     const editingTimeEntry = ref(null);
     const tasks = ref([]);
     const projects = ref([]);
 
-    let pageTitle = ref("Учет рабочего времени - Проводки");
+    const saveTimeEntry = async () => {
+
+        const dataToSend = {
+            ...formData.value,
+            hours: parseFloat(formData.value.hours)
+        }
+
+        if (modalMode.value === 'create'){
+            await createTimeEntry(dataToSend);
+        } else{
+            await updateTimeEntry(editingId.value,  dataToSend);
+        }
+        showModal.value = false;
+    }
+
+    let pageTitle = ref("Проводки");
     const timeEntries = ref([]);
 
     const selectedDate = ref(new Date().toISOString().split('T')[0]);
@@ -32,7 +78,13 @@ import {ref} from 'vue';
         return project ? project.title: "Неизвестный проект";
     }
 
-    const loadTimeEntry = async () => {
+    const getTaskProjectId = (taskId) => {
+        const task = tasks.value.find(t => t.id === taskId);
+        return taskId ? task.projectId : null;
+    };
+
+
+        const loadTimeEntry = async () => {
         try{
             const response = await fetch("https://localhost:7222/api/timeentry");
             if(!response.ok){throw new Error(`HTTP ${response.status}`)};
@@ -66,14 +118,14 @@ import {ref} from 'vue';
         hours: '',
         description: ''
     })
-    const createTimeEntry = async ()=>{
+    const createTimeEntry = async (data)=>{
         try{
             const response = await fetch("https://localhost:7222/api/timeentry", {
                 method: 'POST',
                 headers: {
                     'Content-Type': "application/json"
                 },
-                body: JSON.stringify(newTimeEntry.value)
+                body: JSON.stringify(data)
             })
          if(!response.ok){throw new Error(`HTTP ${response.status}`)};
          const createdTimeEntry = await response.json();
@@ -81,13 +133,7 @@ import {ref} from 'vue';
          timeEntries.value.push(createdTimeEntry);
          await loadDailySummary();
 
-         newTimeEntry.value = 
-         { 
-            taskId: '',
-            date: '',
-            hours: '',
-            description: ''
-         };
+       
          console.log("Проводка создана");
         
         }
@@ -101,21 +147,20 @@ import {ref} from 'vue';
         editingTimeEntry.value = {...timeEntry}
     }
 
-    const updateTimeEntry = async() => {
+    const updateTimeEntry = async(id, data) => {
         try{
-            const response = await fetch(`https://localhost:7222/api/timeentry/${editingTimeEntry.value.id}`,{
+            const response = await fetch(`https://localhost:7222/api/timeentry/${id}`,{
                 method: 'PUT',
                 headers: {
                     'Content-Type': "application/json"
                 },
-                body: JSON.stringify(editingTimeEntry.value)
+                body: JSON.stringify(data)
             });
              if(!response.ok){throw new Error(`HTTP ${response.status}`)};
-             const index = timeEntries.value.findIndex(p => p.id === editingTimeEntry.value.id);
+             const index = timeEntries.value.findIndex(p => p.id === id);
              if(index !== -1){
-                timeEntries.value[index] = {...editingTimeEntry.value}
-             }
-             editingTimeEntry.value = null;
+                timeEntries.value[index] = {...data, id}
+             }       
              console.log("Проводка обновлена");
              await loadDailySummary();
 
@@ -138,128 +183,207 @@ import {ref} from 'vue';
             console.log("Ошибка", error.message);
         }
     }
+
+    const getTodaysDate = () => {
+        let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    let yyyy = today.getFullYear();
+
+    today = mm + '.' + dd + '.' + yyyy;
+        return (today);
+    }
+
+
+    const currentFilter = ref('all');
+    const filterDate = ref(new Date().toISOString().split('T')[0]);
+
+
+    const loadTimeEntriesWithFilter = async () => {
+        try{
+            let url = "https://localhost:7222/api/timeentry";
+
+            if(currentFilter.value === 'day' && filterDate.value){
+                url = `https://localhost:7222/api/timeentry?date=${filterDate.value}`;
+            } else if (currentFilter.value === 'month' && filterDate.value){
+                const monthStr = filterDate.value.slice(0, 7);
+                url =  `https://localhost:7222/api/timeentry?month=${monthStr}-01`;
+            }
+
+            const response = await fetch(url);
+            if(!response.ok) throw new Error(`Http ${response.status}`);
+            timeEntries.value = await response.json();
+        }catch(error){
+            console.log("Ошибка загрузки:", error);
+        }
+    }
+
+    const setFilterAll = () => {
+        currentFilter.value = 'all';
+        loadTimeEntriesWithFilter();
+    }
+    const setFilterDay = () => {
+        currentFilter.value = 'day';
+        filterDate.value = new Date().toISOString().split('T')[0];
+        loadTimeEntriesWithFilter();
+    }
+    const setFilterMonth = () => {
+        currentFilter.value = 'month';
+        filterDate.value = new Date().toISOString().split('T')[0];
+        loadTimeEntriesWithFilter();
+    }
+
+
 </script>
 
 <template>
 <div>
-    <h1>{{ pageTitle }}</h1>
+    
+    
+    <div class="page-title">
+     <h1>{{ pageTitle }}</h1>
+    <button class="title-button" @click="openCreateModal">+ Добавить проводку</button>
+    
+    </div>
 
-    <!-- Блок со стикером -->
-    <div class="summary-block">
-        <h3>Статистика за день</h3>
-        <input type="date" v-model="selectedDate" @change="loadDailySummary">
-        <div v-if="dailySummary" :class="['sticker', dailySummary.stickerColor]">
-            <p class="total-hours">Всего часов: {{ dailySummary.totalHours }}</p>
-            <p class="message">{{ dailySummary.message }}</p>
+    <div class="timeEntry-list">
+        <p class="table-title"> Список проводок</p>
+    
+
+    <div class="filter">
+
+        <button class="filter-button" @click="setFilterAll()">Все время</button>
+        <button class="filter-button" @click="setFilterDay()">За день</button>
+        <button class="filter-button" @click="setFilterMonth()">За месяц</button>
+    </div>
+
+    <div class="timeEntry-table">
+        <p class="timeEntry-table-text">Дата</p>
+        <p class="timeEntry-table-text">Задача</p>
+        <p class="timeEntry-table-text">Проект</p>
+        <p class="timeEntry-table-text">Описание</p>
+        <p class="timeEntry-table-text">Часы</p>
+        <p class="timeEntry-table-text">Действия</p>
+    </div>
+
+    <div v-for="timeEntry in timeEntries" :key="timeEntry.id" class="timeEntry-items">
+        <p class="timeEntry-text"> {{ timeEntry.date?.split('T')[0] || '' }}</p>
+        <p class="timeEntry-text"> {{ getTaskTitle(timeEntry.taskId) }}</p>
+       
+        <p class="timeEntry-text">{{getProjectTitle(getTaskProjectId(timeEntry.taskId)) }}</p>
+        <p class="timeEntry-text"> {{ timeEntry.description }}</p>
+        <p class="timeEntry-text"> {{ timeEntry.hours }}</p>
+        <button class="timeEntry-button" @click="openEditModal(timeEntry)">🛠️</button>
+         <button class="timeEntry-button" @click="deleteTimeEntry(timeEntry.id)">🗑️</button>
+       
+
+    </div>
+
+    </div>
+
+
+    <!-- Модалка -->
+
+    <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
+
+        <div class="modal">
+
+            <h3 class="modal-title">{{ modalMode === 'create' ? 'Создать проводку' : 'Редактировать проводку' }}</h3>
+             <input type="date" v-model="formData.date">
+             <select v-model="formData.taskId" class="modal-selector" name="" id="">
+
+                <option value="" disabled>Выберите задачу</option>
+                <option v-for="task in tasks" :key="task.id" :value="task.id">{{ task.title }}</option>
+             </select>
+             <input v-model="formData.hours" type="text" name="" id="">
+             <p>Уже спизано за {{ getTodaysDate() }}:    часов</p>
+
+             <input type="text" v-model="formData.description">
+            
+             <div class="modal-buttons">
+            <button @click="showModal = false" class="modal-button">Отменить</button>
+            <button @click="saveTimeEntry()" class="modal-button">Сохранить</button>
         </div>
-        <div v-else class="sticker gray">
-            <p>Нет данных за выбранную дату</p>
+
         </div>
+
     </div>
 
-    <!-- Список проводок -->
-    <h3>Все проводки</h3>
-    <ul>
-        <li v-for="entry in timeEntries" :key="entry.id">
-            {{ entry.date.split('T')[0] }} - 
-            {{ getTaskTitle(entry.taskId) }} - 
-            {{ entry.hours }}ч - 
-            {{ entry.description }}
-            <button @click="startEdit(entry)">Редактировать</button>
-            <button @click="deleteTimeEntry(entry.id)">Удалить</button>
-        </li>
-    </ul>
-
-    <!-- Форма создания -->
-    <div v-if="!editingTimeEntry">
-        <h3>Новая проводка</h3>
-        <input type="date" v-model="newTimeEntry.date">
-        
-        <select v-model="newTimeEntry.taskId">
-            <option value="" disabled>Выберите задачу</option>
-            <option v-for="task in tasks" :key="task.id" :value="task.id">
-                {{ task.title }} ({{ getProjectTitle(task.projectId) }})
-            </option>
-        </select>
-        
-        <input type="number" v-model="newTimeEntry.hours" placeholder="Часы" min="0.5" max="24" step="0.5">
-        <input v-model="newTimeEntry.description" placeholder="Описание">
-        
-        <button @click="createTimeEntry">Создать</button>
-    </div>
-
-    <!-- Форма редактирования -->
-    <div v-else>
-        <h3>Редактирование проводки</h3>
-        <input type="date" v-model="editingTimeEntry.date">
-        
-        <select v-model="editingTimeEntry.taskId">
-            <option v-for="task in tasks" :key="task.id" :value="task.id">
-                {{ task.title }}
-            </option>
-        </select>
-        
-        <input type="number" v-model="editingTimeEntry.hours" placeholder="Часы" min="0.5" max="24" step="0.5">
-        <input v-model="editingTimeEntry.description" placeholder="Описание">
-        
-        <button @click="updateTimeEntry">Сохранить</button>
-        <button @click="editingTimeEntry = null">Отмена</button>
-    </div>
 </div>
 </template>
 
+
+
 <style scoped>
-.sticker {
-    padding: 15px;
-    border-radius: 8px;
-    margin: 10px 0;
+
+
+.filter-button{
+    height: 30px;
+    width: 90px;
     font-weight: bold;
-    max-width: 300px;
-}
-.yellow {
-    background-color: #fff3cd;
-    color: #856404;
-    border: 1px solid #ffeeba;
-}
-.green {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-}
-.red {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-}
-.gray {
-    background-color: #e9ecef;
-    color: #495057;
-    border: 1px solid #ced4da;
-}
-.summary-block {
-    margin-bottom: 30px;
-    padding: 20px;
-    background: #f8f9fa;
-    border-radius: 8px;
-}
-ul {
-    list-style: none;
-    padding: 0;
-}
-li {
-    padding: 10px;
-    margin: 5px 0;
-    background: white;
-    border: 1px solid #dee2e6;
-    border-radius: 4px;
-}
-button {
-    margin-left: 10px;
-    padding: 5px 10px;
+    border: 0;
     cursor: pointer;
+    margin-bottom: 15px;
+     transition: background-color 0.3s;
 }
-input, select {
-    margin: 5px;
-    padding: 5px;
+.filter-button:hover{
+    background-color: lightgray;
 }
+.filter-button:first-child{
+    margin-left: 30px;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+.filter-button:last-child{
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.title-button{
+
+    font-size: 19px;
+}
+
+.timeEntry-list{
+    border: 2px solid lightgray;
+    max-width: 1500px;
+    margin-left: 30px;
+    border-radius: 15px;
+}
+
+.timeEntry-table{
+    display: grid;
+    grid-template-columns: 150px 300px 400px 350px 200px 200px;
+    border-bottom: 1px solid lightgray;
+}
+.timeEntry-table-text:first-child{
+    margin-left: 30px;
+}
+
+
+.timeEntry-text:first-child{
+    margin-left: 30px;
+}
+.timeEntry-items{
+    display: grid;
+    grid-template-columns: 150px 300px 400px 350px 200px 30px 30px;
+    border-bottom: 1px solid rgb(228, 228, 228);
+}
+.timeEntry-button{
+  width: 40px;
+    height: 40px;
+    background-color: transparent;
+    border-radius: 10px;
+    border: 0;
+    cursor: pointer;
+    text-align: center;
+     transition: background-color 0.3s;
+}
+.timeEntry-button:hover{
+     background-color: lightgray;
+}
+.timeEntry-button:last-child{
+    margin-left: 10px;
+}
+
 </style>

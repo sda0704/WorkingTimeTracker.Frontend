@@ -183,6 +183,12 @@ loadProjects();
 </template>
 <style>
 
+@font-face{
+    font-family: "Comfortaa";
+    src: local("Comfortaa-Regular"),
+    url(/src/fonts/Comfortaa/Comfortaa-Regular.ttf) format("ttf");
+    font-weight: normal;
+}
 
 
 
@@ -217,6 +223,7 @@ to{
     border: 1px solid lightgray;
     background-color: inherit;
     border-radius: 10px;
+    font-family: "Comfortaa", sans-serif;
     font-weight: bold;
       transition: background-color 0.3s;
 
@@ -352,16 +359,21 @@ input:checked + .slider:before{
 .table-title{
     margin-left: 30px;
     font-size: 20px;
+    font-family: "Comfortaa", sans-serif;
     font-weight: bold;
 }
 .projects-items{
       display: grid;
       margin-top: 10px;
+        font-family: "Comfortaa", sans-serif;
     grid-template-columns:800px  300px  300px  30px 30px;
     border-bottom: 1px solid #f5f5f5;
 }
 .project-text:first-child{
     margin-left: 30px;
+}
+.table-text{
+    font-family: "Comfortaa", sans-serif;
 }
 .table-text:first-child{
     margin-left: 30px;
@@ -369,6 +381,7 @@ input:checked + .slider:before{
 
 
 h1{
+    font-family: "Comfortaa", sans-serif;
     margin-left: 30px;
 }
 .projects-btn{

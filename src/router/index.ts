@@ -2,12 +2,14 @@ import { createRouter, createWebHistory } from 'vue-router'
 import ProjectView from '@/views/ProjectView.vue';
 import TaskView from '@/views/TaskView.vue';
 import TimeEntryView from '@/views/TimeEntryView.vue';
+import DashBoardView from '@/views/DashBoardView.vue';
 
 
 const routes = [
   {
-    path: '/',
-    redirect: '/projects'
+    path: '/dashboard',
+    name: 'dashboard',
+    component: DashBoardView
   },
   {
     path: '/projects',
