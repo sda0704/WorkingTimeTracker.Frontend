@@ -39,6 +39,14 @@ const saveTask = async () => {
     showModal.value = false;
 }
 
+  const isProjectDropdownOpen = ref(false);
+    const selectedProjectName = ref('Выберите проект');
+
+    const selectProject = (project) => {
+        formData.value.projectId = project.id;
+       selectedProjectName.value = project.title;
+        isProjectDropdownOpen.value = false
+    }
 
 let pageTitle = ref("Задачи");
 let tasks = ref([]);
@@ -186,12 +194,20 @@ const getProjectTitle = (projectId) => {
         <h3 class="modal-title">{{ modalMode === 'create' ? 'Создать задачу' : 'Редактировать задачу' }}</h3>
 
         <input v-model="formData.title" placeholder="Название задачи" class="modal-input">
-        <select v-model="formData.projectId" class="modal-selector">
-            <option value="" disabled>Выберите проект</option>
-            <option v-for="project in projects" :key="project.id" :value="project.id">
-                {{ project.title }}
-            </option>
-        </select>
+       
+                 <div class="custom-select">
+                   
+                    <button type="button" class="select-button" @click="isProjectDropdownOpen = !isProjectDropdownOpen">
+                    {{ selectedProjectName }}
+                    <span class="arrow">🢃</span>    
+                    </button>
+                    <div v-if="isProjectDropdownOpen" class="dropdown-list">
+                        <div v-for="project in projects" :key = "project.id" class="dropdown-item" @click="selectProject(project)">
+
+                            {{ project.title }}
+                        </div>
+                    </div>
+                </div>
     <label class="switch">
         <input class="checkbox" type="checkbox" v-model="formData.isActive">
         <span class="slider"></span>
@@ -348,7 +364,7 @@ to{
 .modal-input{
     display: flex;
     height: 40px;
-    background-color: lightgray;
+    background-color: rgb(235, 235, 235);
     border-radius: 10px;
     padding-left: 20px;
     margin-bottom: 10px;
@@ -438,5 +454,75 @@ input:checked + .slider{
 input:checked + .slider:before{
     transform: translateX(26px);
 }
+
+
+
+.custom-select{
+    position: relative;
+    height: 40px;
+    
+    background-color: lightgray;
+    border-radius: 10px;
+    
+    margin-bottom: 10px;
+    width: 94%;
+    border: 0;
+    margin-left: 15px;
+     outline: 2px solid transparent; 
+  transition: outline-color 0.3s ease;
+}
+
+.select-button{
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    align-items: center;
+    height: 40px;
+    width: 100%;
+    background-color: rgb(235, 235, 235);
+    border-radius: 10px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border: 0;
+    text-align: start;
+    font-size: 13px;
+     outline: 2px solid transparent; 
+  transition: outline-color 0.3s ease;
+ 
+}
+
+.arrow{
+
+    margin-left: auto;
+}
+
+.dropdown-list{   
+    position: absolute;
+   background-color: rgb(235, 235, 235);
+   border-bottom-left-radius: 15px;
+   border-bottom-right-radius: 15px;
+    
+    margin-bottom: 10px;
+    width: 100%;
+    border: 0;
+    outline: 2px solid transparent; 
+  transition: outline-color 0.3s ease;
+}
+
+.dropdown-item{
+    margin-left: 30px;
+    font-size: 18px;
+    margin-bottom: 15px;
+    cursor: pointer;
+
+
+}
+.dropdown-item:hover{
+    background-color: lightgray;
+}
+.dropdown-item:first-child{
+    margin-top: 10px;
+}
+
 
 </style>

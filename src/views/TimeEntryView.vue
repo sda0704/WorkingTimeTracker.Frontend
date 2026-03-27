@@ -32,6 +32,15 @@ import {ref} from 'vue';
     }
 
 
+    const isTaskDropdownOpen = ref(false);
+    const selectedTaskName = ref('Выберите задачу');
+
+    const selectTask = (task) => {
+        formData.value.taskId = task.id;
+        selectedTaskName.value = task.title;
+        isTaskDropdownOpen.value = false
+    }
+
     const editingTimeEntry = ref(null);
     const tasks = ref([]);
     const projects = ref([]);
@@ -129,7 +138,8 @@ import {ref} from 'vue';
             })
          if(!response.ok){throw new Error(`HTTP ${response.status}`)};
          const createdTimeEntry = await response.json();
-
+        
+        
          timeEntries.value.push(createdTimeEntry);
          await loadDailySummary();
 
@@ -289,16 +299,28 @@ import {ref} from 'vue';
         <div class="modal">
 
             <h3 class="modal-title">{{ modalMode === 'create' ? 'Создать проводку' : 'Редактировать проводку' }}</h3>
-             <input type="date" v-model="formData.date">
-             <select v-model="formData.taskId" class="modal-selector" name="" id="">
+            <input class="modal-date" type="date" v-model="formData.date">
 
-                <option value="" disabled>Выберите задачу</option>
-                <option v-for="task in tasks" :key="task.id" :value="task.id">{{ task.title }}</option>
-             </select>
-             <input v-model="formData.hours" type="text" name="" id="">
-             <p>Уже спизано за {{ getTodaysDate() }}:    часов</p>
+             
+                <div class="custom-select">
+                   
+                    <button type="button" class="select-button" @click="isTaskDropdownOpen = !isTaskDropdownOpen">
+                    {{ selectedTaskName }}
+                    <span class="arrow">🢃</span>    
+                    </button>
+                    <div v-if="isTaskDropdownOpen" class="dropdown-list">
+                        <div v-for="task in tasks" :key = "task.id" class="dropdown-item" @click="selectTask(task)">
 
-             <input type="text" v-model="formData.description">
+                            {{ task.title }}
+                        </div>
+                    </div>
+                </div>
+           
+             
+             <input v-model="formData.hours" type="text" name="" id="" class="modal-input" placeholder="Кол-во часов">
+             <p class="modal-text">Уже спиcано за {{ getTodaysDate() }}: {{ dailySummary.totalHours }} часов</p>
+
+             <input type="text" v-model="formData.description" class="modal-input" placeholder="Описание">
             
              <div class="modal-buttons">
             <button @click="showModal = false" class="modal-button">Отменить</button>
@@ -316,6 +338,213 @@ import {ref} from 'vue';
 
 <style scoped>
 
+
+/* modal */
+
+.modal{
+    position: fixed;       
+    top: 25%;
+    left:39%;   
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    max-width: 500px;
+    max-height: 450px;
+    height: 100%;
+    width: 90%;
+    position: relative;
+    animation: modalFadeIn 0.3s ease-out;
+    }
+@keyframes modalFadeIn{
+    from{opacity: 0;
+    transform: translateY(-10px);
+}
+to{
+    opacity: 1;
+    transform: translateY(0);
+}
+
+}
+
+.modal-date{
+    width: 90%;
+    font-size: 15px;
+    margin-left: 10px;
+    padding-left: 20px;
+    
+    height: 9%;
+    border-radius: 15px;
+    border: 2px solid rgb(233, 233, 233);
+    background-color: rgb(235, 235, 235);
+    margin-bottom: 20px;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-outer-spin-button {
+    /* Подумать как переделать!!! */
+    padding-right: 75%;
+    
+}
+
+
+
+
+
+.modal-button{
+    border: 0;
+    width: 90px;
+    height: 40px;
+    border: 1px solid lightgray;
+    background-color: inherit;
+    border-radius: 10px;
+    font-family: "Comfortaa", sans-serif;
+    font-weight: bold;
+      transition: background-color 0.3s;
+
+}
+.modal-button:hover{
+    background-color: lightgray;
+}
+.modal-button:hover:last-child{
+    background-color: #1e1d1d;
+}
+
+.modal-button:last-child{
+    background-color: black;
+    color: white;
+}
+.modal-buttons{
+    display:flex;
+   justify-content: flex-end;
+   gap: 10px;
+    padding: 10px;
+}
+.modal-title{
+    padding-left: 15px;
+    padding-top: 20px;
+    font-size: 25px;
+    font-weight: bold;
+}
+.modal-input{
+    display: flex;
+    height: 40px;
+    
+    background-color: lightgray;
+    border-radius: 10px;
+    padding-left: 20px;
+    margin-bottom: 10px;
+    width: 90%;
+    border: 0;
+    margin-left: 15px;
+     outline: 2px solid transparent; 
+  transition: outline-color 0.3s ease;
+}
+.modal-input:focus{
+    outline-color:  gray;
+}
+.modal-overlay{
+  
+    position: fixed;
+    top: 0;
+    left:0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.custom-select{
+    position: relative;
+    height: 40px;
+    
+    background-color: lightgray;
+    border-radius: 10px;
+    
+    margin-bottom: 10px;
+    width: 94%;
+    border: 0;
+    margin-left: 15px;
+     outline: 2px solid transparent; 
+  transition: outline-color 0.3s ease;
+}
+
+.select-button{
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    align-items: center;
+    height: 40px;
+    width: 100%;
+    background-color: rgb(235, 235, 235);
+    border-radius: 10px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border: 0;
+    text-align: start;
+    font-size: 13px;
+     outline: 2px solid transparent; 
+  transition: outline-color 0.3s ease;
+ 
+}
+
+.arrow{
+
+    margin-left: auto;
+}
+
+.dropdown-list{   
+    position: absolute;
+   background-color: rgb(235, 235, 235);
+   border-bottom-left-radius: 15px;
+   border-bottom-right-radius: 15px;
+    
+    margin-bottom: 10px;
+    width: 100%;
+    border: 0;
+    outline: 2px solid transparent; 
+  transition: outline-color 0.3s ease;
+}
+
+.dropdown-item{
+    margin-left: 30px;
+    font-size: 18px;
+    margin-bottom: 15px;
+    cursor: pointer;
+
+
+}
+.dropdown-item:hover{
+    background-color: lightgray;
+}
+.dropdown-item:first-child{
+    margin-top: 10px;
+}
+
+.modal-input{
+    display: flex;
+    height: 40px;
+    background-color: rgb(235, 235, 235);
+    border-radius: 10px;
+    padding-left: 20px;
+    margin-bottom: 10px;
+    width: 90%;
+    border: 0;
+    margin-left: 15px;
+    outline: 2px solid transparent; 
+  transition: outline-color 0.3s ease;
+}
+
+.modal-text{
+    font-size: 18px;
+    margin-left: 15px;
+}
+
+
+/* filter */
 
 .filter-button{
     height: 30px;
