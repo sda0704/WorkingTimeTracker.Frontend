@@ -415,7 +415,9 @@ to{
     height: 24px;
     margin-left: 15px;
     margin-bottom: 10px;
+
 } 
+
 
 .switch input{
     opacity: 0;
@@ -501,7 +503,7 @@ input:checked + .slider:before{
    background-color: rgb(235, 235, 235);
    border-bottom-left-radius: 15px;
    border-bottom-right-radius: 15px;
-    
+    z-index: 10;
     margin-bottom: 10px;
     width: 100%;
     border: 0;
