@@ -1,9 +1,10 @@
 <script setup> 
 
+
 import {ref} from 'vue';
 
 
-
+    const errorMessage = ref('');
     const showModal = ref(false);
     const modalMode = ref('create');
     const formData = ref({
@@ -47,6 +48,7 @@ import {ref} from 'vue';
 
     const saveTimeEntry = async () => {
 
+
         const dataToSend = {
             ...formData.value,
             hours: parseFloat(formData.value.hours)
@@ -58,6 +60,8 @@ import {ref} from 'vue';
             await updateTimeEntry(editingId.value,  dataToSend);
         }
         showModal.value = false;
+        
+       
     }
 
     let pageTitle = ref("Проводки");
@@ -299,6 +303,7 @@ import {ref} from 'vue';
         <div class="modal">
 
             <h3 class="modal-title">{{ modalMode === 'create' ? 'Создать проводку' : 'Редактировать проводку' }}</h3>
+            <div v-if="errorMessage"> {{errorMessage  }}</div>
             <input class="modal-date" type="date" v-model="formData.date">
 
              
@@ -338,6 +343,22 @@ import {ref} from 'vue';
 
 <style scoped>
 
+.errorMessage{
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 8px;
+    margin: 10px 15px ;
+    border: 1px solid #f5c6cb;
+    font-size: 14px;
+}
+
+@font-face{
+    font-family: "Comfortaa";
+    src: local("Comfortaa-Regular"),
+    url(/workingtime-frontend/src/fonts/Comfortaa/Comfortaa-Regular.ttf) format("ttf");
+    font-weight: normal;
+}
 
 /* modal */
 
@@ -370,6 +391,7 @@ to{
     width: 90%;
     font-size: 15px;
     margin-left: 10px;
+      font-family: "Comfortaa", sans-serif;
     padding-left: 20px;
     
     height: 9%;
@@ -425,6 +447,7 @@ input[type="date"]::-webkit-outer-spin-button {
     padding-top: 20px;
     font-size: 25px;
     font-weight: bold;
+      font-family: "Comfortaa", sans-serif;
 }
 .modal-input{
     display: flex;
@@ -486,6 +509,7 @@ input[type="date"]::-webkit-outer-spin-button {
     border: 0;
     text-align: start;
     font-size: 13px;
+      font-family: "Comfortaa", sans-serif;
      outline: 2px solid transparent; 
   transition: outline-color 0.3s ease;
  
@@ -512,6 +536,7 @@ input[type="date"]::-webkit-outer-spin-button {
 .dropdown-item{
     margin-left: 30px;
     font-size: 18px;
+      font-family: "Comfortaa", sans-serif;
     margin-bottom: 15px;
     cursor: pointer;
 
@@ -540,6 +565,7 @@ input[type="date"]::-webkit-outer-spin-button {
 
 .modal-text{
     font-size: 18px;
+      font-family: "Comfortaa", sans-serif;
     margin-left: 15px;
 }
 
@@ -548,6 +574,7 @@ input[type="date"]::-webkit-outer-spin-button {
 
 .filter-button{
     height: 30px;
+      font-family: "Comfortaa", sans-serif;
     width: 90px;
     font-weight: bold;
     border: 0;
@@ -571,6 +598,7 @@ input[type="date"]::-webkit-outer-spin-button {
 .title-button{
 
     font-size: 19px;
+      font-family: "Comfortaa", sans-serif;
 }
 
 .timeEntry-list{
@@ -578,6 +606,7 @@ input[type="date"]::-webkit-outer-spin-button {
     max-width: 1500px;
     margin-left: 30px;
     border-radius: 15px;
+    background-color: white;
 }
 
 .timeEntry-table{

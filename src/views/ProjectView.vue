@@ -159,6 +159,7 @@ loadProjects();
    
     </div>
 
+<!-- Модалка -->
 
 <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
     <div class="modal">
@@ -339,6 +340,7 @@ input:checked + .slider:before{
     width: 200px;
     background-color: black;
     border: 0;
+      font-family: "Comfortaa", sans-serif;
     color: white;
     font-size: 20px;
     border-radius: 10px;
@@ -403,6 +405,7 @@ h1{
 
 .projects-list{
     border: 2px solid lightgray;
+    background-color: white;
     max-width: 1500px ;
     margin-left: 30px;
     border-radius: 20px;

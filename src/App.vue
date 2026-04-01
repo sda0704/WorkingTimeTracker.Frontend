@@ -4,7 +4,7 @@
 </script>
 
 <template>
-<div>
+<div class="app-root">
    <div class="header">
 
 <img src="/images/timer-with-red-colour_78370-7250.jpg" alt="" class="header-logo">
@@ -41,6 +41,25 @@
 
 <style scoped>
 
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+:global(html), :global(body){
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+.app-root{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    min-height: 100vh;
+    width: 100%;
+    overflow: hidden;
+}
 @font-face{
     font-family: "Comfortaa";
     src: local("Comfortaa-Regular"),
@@ -50,14 +69,21 @@
 
 .main-part{
   display:flex;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
 }
+
 .header{
-    height: 60px;
+    height: 80px;
+    flex-shrink: 0;
     border-bottom: 1px solid lightgray;
     display: flex;
     align-items: center;
+    background-color: white;
 }
 .header-logo{
+    margin-left: 100px;
     height: 60px;
     width: 60px;
 }
@@ -68,16 +94,19 @@
 }   
 .aside{
    
-    height: 1000px;
+    width: 300px;
+    flex-shrink: 0;
     border-right: 1px solid lightgray;
     align-items: center;
+    background-color: white;
     display: block;
     text-align: center; 
+    overflow-y: auto;
     
 }
 
 .aside-btn{
-    width: 300px;
+    width: 100%;
     height: 40px;
     border: 0;
     border-radius: 10px;
@@ -111,11 +140,17 @@
     padding-top: 30px;
 }
 .btn-wrapper-aside{
-    width: 90%;
-    display: flex;
-    align-items: center ;
-    justify-content: center;
+    width: 100%;
+    padding: 0 10px;
+   box-sizing: border-box;
 }
 
+.content{
+    background-color: rgb(247, 247, 247);
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    
+}
 
 </style>

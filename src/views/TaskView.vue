@@ -64,11 +64,7 @@ const loadTasks = async () => {
 }
 loadTasks();
 
-const newTask = ref({
-    title: '',
-    isActive: true,
-    projectId: ''
-});
+
 
 const createTask = async(data) => {
     try{
@@ -92,9 +88,7 @@ const createTask = async(data) => {
 const GetActiveStatus = (isActive) => {
     return isActive ? "Активна" : "Неактивна"
 }
-const startEdit = async (task)  => {
-    editingTask.value = {...task};
-};
+
 
 const updateTask = async (id, data) => {
     try{
@@ -226,7 +220,12 @@ const getProjectTitle = (projectId) => {
 </template>
 
 <style>
-
+@font-face{
+    font-family: "Comfortaa";
+    src: local("Comfortaa-Regular"),
+    url(/workingtime-frontend/src/fonts/Comfortaa/Comfortaa-Regular.ttf) format("ttf");
+    font-weight: normal;
+}
 
 /* page-title */
 
@@ -246,7 +245,7 @@ const getProjectTitle = (projectId) => {
     font-size: 20px;
     border-radius: 10px;
     height: 40px;
-
+  font-family: "Comfortaa", sans-serif;
 }
 
 
@@ -255,6 +254,7 @@ const getProjectTitle = (projectId) => {
     margin-left: 30px;
 }
 .tasks-list{
+    background-color: white;    
      border: 2px solid lightgray;
     max-width: 1500px ;
     margin-left: 30px;
@@ -336,6 +336,7 @@ to{
     background-color: inherit;
     border-radius: 10px;
     font-weight: bold;
+      font-family: "Comfortaa", sans-serif;
       transition: background-color 0.3s;
 
 }
@@ -488,6 +489,7 @@ input:checked + .slider:before{
     border: 0;
     text-align: start;
     font-size: 13px;
+      font-family: "Comfortaa", sans-serif;
      outline: 2px solid transparent; 
   transition: outline-color 0.3s ease;
  
@@ -514,6 +516,7 @@ input:checked + .slider:before{
 .dropdown-item{
     margin-left: 30px;
     font-size: 18px;
+      font-family: "Comfortaa", sans-serif;
     margin-bottom: 15px;
     cursor: pointer;
 
