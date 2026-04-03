@@ -4,6 +4,55 @@
    import {ref, onMounted} from 'vue';
 
    const isDarkMode = ref(false);
+    const isAsideHidden = ref(false);
+
+   const MoscowTime = ref('');
+   const MoscowDate = ref('');
+
+
+    const getMoscowTime = () => {
+    const now = new Date();
+
+    const moscowTime = new Date(now.toLocaleString('en-US', {timeZone: 'Europe/Moscow'}));
+    const hours = String(moscowTime.getHours()).padStart(2, '0');
+    const minutes = String(moscowTime.getMinutes()).padStart(2,'0');
+    const seconds = String(moscowTime.getSeconds()).padStart(2, '0');
+    MoscowTime.value = `${hours}:${minutes}:${seconds}`
+
+     
+
+    }
+     
+    const getMoscowDate = () => {
+      const now = new Date();
+      
+       const moscowTime = new Date(now.toLocaleString('en-US', {timeZone: 'Europe/Moscow'}));
+       const days = String(moscowTime.getDate()).padStart(2, '0');
+       const month = String(moscowTime.getMonth() + 1).padStart(2, '0');
+       const years = String(moscowTime.getFullYear());
+
+       MoscowDate.value = `${days}.${month}.${years}`;
+
+      
+    }
+
+
+const toggleAside = () => {
+    isAsideHidden.value = !isAsideHidden.value;
+    if (isAsideHidden.value) {
+        document.body.classList.add('aside-hidden');
+    } else {
+        document.body.classList.remove('aside-hidden');
+    }
+    localStorage.setItem('asideHidden', String(isAsideHidden.value));
+};
+onMounted(() => {
+    const savedAsideState = localStorage.getItem('asideHidden');
+    if (savedAsideState === 'true') {
+        isAsideHidden.value = true;
+        document.body.classList.add('aside-hidden');
+    }
+});
 
    const toggleDarkMode = () => {
     isDarkMode.value = !isDarkMode.value;
@@ -21,8 +70,16 @@
             isDarkMode.value = true;
             document.body.classList.add('dark');
         }
-    })
+          UpdateDateTime();
+        setInterval(UpdateDateTime, 1000)
+    });
    
+    const UpdateDateTime = () => {
+        getMoscowDate();
+        getMoscowTime();
+    };
+   
+
 </script>
 
 <template>
@@ -31,6 +88,8 @@
 
 <img src="/images/timer-with-red-colour_78370-7250.jpg" alt="" class="header-logo">
 <p class="header-text">Учет рабочего времени</p>
+<button @click="toggleAside()">кнопка</button>
+<p class="dateTime">{{ MoscowTime}}  {{ MoscowDate }}</p>
 <button @click="toggleDarkMode" class="theme-toggle">
     {{ isDarkMode ? '🌞' : '🌕'}}
 </button>
@@ -63,18 +122,30 @@
 </div>
 </template>
 
+<style>
+@import url(./assets/hide-aside.css);
+</style>
 <style scoped>
-
+@font-face{
+    font-family: "Comfortaa";
+    src: local("Comfortaa-Regular"),
+    url(/src/fonts/Comfortaa/Comfortaa-Regular.ttf) format("ttf");
+    font-weight: normal;
+}
 @import url(./assets/dark-theme.css);
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-:global(html), :global(body){
-    height: 100%;
-    margin: 0;
-    padding: 0;
+
+
+.dateTime{
+      margin-left: auto;
+    margin-right: 20px;
+  font-family: "Comfortaa", sans-serif;
+  font-weight: bold;
+  font-size: 20px;
 }
 
 .theme-toggle{
@@ -82,7 +153,6 @@
     border: none;
     font-size: 24px;
     cursor: pointer;
-    margin-left: auto;
     margin-right: 20px;
 }
 
@@ -94,12 +164,7 @@
     width: 100%;
     overflow: hidden;
 }
-@font-face{
-    font-family: "Comfortaa";
-    src: local("Comfortaa-Regular"),
-    url(/src/fonts/Comfortaa/Comfortaa-Regular.ttf) format("ttf");
-    font-weight: normal;
-}
+
 
 .main-part{
   display:flex;
@@ -123,7 +188,7 @@
 }
 .header-text{
     font-size: 20px;
-    font-family: "Comfortaa" sans-serif;
+    font-family: "Comfortaa", sans-serif;
     font-weight: bold;
 }   
 .aside{
