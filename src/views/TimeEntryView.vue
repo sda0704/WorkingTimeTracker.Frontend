@@ -1,6 +1,7 @@
 <script setup> 
 
 
+
 import {ref} from 'vue';
 
 
@@ -16,6 +17,7 @@ import {ref} from 'vue';
     const editingId = ref(null);
 
     const openCreateModal =() => {
+        errorMessage.value = '';
         modalMode.value = 'create';
         formData.value = {  date: '',
         taskId: '',
@@ -26,6 +28,7 @@ import {ref} from 'vue';
     }
 
     const openEditModal = (timeEntry) => {
+        errorMessage.value = '';
         modalMode.value = 'edit';
         formData.value = {...timeEntry};
         editingId.value = timeEntry.id;
@@ -47,20 +50,42 @@ import {ref} from 'vue';
     const projects = ref([]);
 
     const saveTimeEntry = async () => {
+        errorMessage.value = '';
+
+        if(!formData.value.date){
+            errorMessage.value = "Выберите дату";
+            return;
+        }
+        if(!formData.value.hours || formData.value.hours <= 0){
+            errorMessage.value = "Кол-во часов должно быть больше нуля";
+            return;
+        }
+        if(formData.value.hours > 24){
+            errorMessage.value = "Кол-во часов не может быть больше 24"
+            return;
+        }
+       if(!formData.value.description){
+            errorMessage.value = "Описание не может быть пустым";
+            return;
+        }
 
 
         const dataToSend = {
-            ...formData.value,
-            hours: parseFloat(formData.value.hours)
-        }
-
+         taskId: formData.value.taskId,
+         date: formData.value.date,
+         hours: parseFloat(formData.value.hours),
+         description: formData.value.description
+        };
+        try{
         if (modalMode.value === 'create'){
             await createTimeEntry(dataToSend);
         } else{
             await updateTimeEntry(editingId.value,  dataToSend);
         }
         showModal.value = false;
-        
+    } catch(error){
+        errorMessage.value = error.message;
+    }
        
     }
 
@@ -133,36 +158,39 @@ import {ref} from 'vue';
     })
     const createTimeEntry = async (data)=>{
         try{
+      
+
             const response = await fetch("https://localhost:7222/api/timeentry", {
                 method: 'POST',
                 headers: {
                     'Content-Type': "application/json"
                 },
                 body: JSON.stringify(data)
-            })
-         if(!response.ok){throw new Error(`HTTP ${response.status}`)};
-         const createdTimeEntry = await response.json();
-        
-        
-         timeEntries.value.push(createdTimeEntry);
-         await loadDailySummary();
-
-       
-         console.log("Проводка создана");
-        
+        });
+        if(!response.ok){
+            let errorText = await response.text();
+            try{
+                const errorJson = await JSON.parse(errorText);
+                errorText = errorJson.message || errorText;
+            }catch(e){
+               
+            }
+             throw new Error(errorText);
         }
-        
-        catch(error){
-            console.log("Ошибка", error.message);
+        const createdTimeEntry = await response.json();
+        timeEntries.value.push(createdTimeEntry);
+        await loadDailySummary();
+    }catch(error){
+        throw error;
+    }
         }
-    }
 
-    const startEdit =  (timeEntry) => {
-        editingTimeEntry.value = {...timeEntry}
-    }
+
+ 
 
     const updateTimeEntry = async(id, data) => {
-        try{
+      
+    try{
             const response = await fetch(`https://localhost:7222/api/timeentry/${id}`,{
                 method: 'PUT',
                 headers: {
@@ -170,19 +198,30 @@ import {ref} from 'vue';
                 },
                 body: JSON.stringify(data)
             });
-             if(!response.ok){throw new Error(`HTTP ${response.status}`)};
+            
+             if(!response.ok){
+                let errorText = await response.text();
+                try{
+                    const errorJson = JSON.parse(errorText);
+                    errorText = errorJson.message || errorText;
+                } catch(e){}
+                    throw new Error(errorText);
+                }
+            
              const index = timeEntries.value.findIndex(p => p.id === id);
              if(index !== -1){
                 timeEntries.value[index] = {...data, id}
              }       
-             console.log("Проводка обновлена");
+             
              await loadDailySummary();
-
+            }
+            catch(error){
+                
+                throw error;
+            }
         }
-        catch(error){
-            console.log("Ошибка", error.message);
-        }
-    }
+       
+    
     const deleteTimeEntry = async (id) => {
         try{
             const response = await fetch(`https://localhost:7222/api/timeentry/${id}`, {
@@ -201,10 +240,10 @@ import {ref} from 'vue';
     const getTodaysDate = () => {
         let today = new Date();
     let dd = String(today.getDate()).padStart(2, '0');
-    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); 
     let yyyy = today.getFullYear();
 
-    today = mm + '.' + dd + '.' + yyyy;
+    today = dd + '.' + mm + '.' + yyyy;
         return (today);
     }
 
@@ -300,10 +339,11 @@ import {ref} from 'vue';
 
     <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
 
+        
         <div class="modal">
 
             <h3 class="modal-title">{{ modalMode === 'create' ? 'Создать проводку' : 'Редактировать проводку' }}</h3>
-            <div v-if="errorMessage"> {{errorMessage  }}</div>
+            <div v-if="errorMessage" class="error-message"> {{errorMessage  }}</div>
             <input class="modal-date" type="date" v-model="formData.date">
 
              
@@ -327,7 +367,10 @@ import {ref} from 'vue';
 
              <input type="text" v-model="formData.description" class="modal-input" placeholder="Описание">
             
+             
+             
              <div class="modal-buttons">
+                
             <button @click="showModal = false" class="modal-button">Отменить</button>
             <button @click="saveTimeEntry()" class="modal-button">Сохранить</button>
         </div>
@@ -343,7 +386,8 @@ import {ref} from 'vue';
 
 <style scoped>
 
-.errorMessage{
+
+.error-message{
     background-color: #f8d7da;
     color: #721c24;
     padding: 10px;

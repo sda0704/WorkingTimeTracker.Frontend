@@ -3,6 +3,7 @@ import {ref } from 'vue';
 
 
 
+const ErrorMessage = ref('');
 
 const showModal = ref(false);
 const modalMode = ref('create');
