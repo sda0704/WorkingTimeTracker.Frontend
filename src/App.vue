@@ -90,9 +90,7 @@ onMounted(() => {
 <p class="header-text">Учет рабочего времени</p>
 <button @click="toggleAside()">кнопка</button>
 <p class="dateTime">{{ MoscowTime}}  {{ MoscowDate }}</p>
-<button @click="toggleDarkMode" class="theme-toggle">
-    {{ isDarkMode ? '🌞' : '🌕'}}
-</button>
+
     </div>
     <div class="main-part">
 
@@ -112,6 +110,14 @@ onMounted(() => {
         <router-link to="/timeentry" class="aside-btn"><img src="/images/time.svg" alt="" class="aside-logo">Учет времени</router-link>
         </div>
         
+       <label class="switch">
+    <input class="checkbox" type="checkbox" @click="toggleDarkMode()">
+    <span class="slider">
+        <span class="knob"></span>
+    </span>
+</label>
+        
+   
     </div>
   <main class="content">
     <RouterView />
@@ -148,14 +154,87 @@ onMounted(() => {
   font-size: 20px;
 }
 
-.theme-toggle{
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    margin-right: 20px;
+.switch {
+    position: relative;
+    flex-direction: end;
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+    margin-left: auto;
+    margin-right: 30px;
+    margin-bottom: 40px;
+    margin-top: auto;
 }
 
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.3s;
+    border-radius: 34px;
+}
+
+input:checked + .slider{
+    background-color: rgb(0, 0, 0);
+
+}
+
+.knob {
+    position: absolute;
+    height: 22px;
+    width: 22px;
+    
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    
+}
+
+
+
+.knob::before {
+    content: "☀️";
+    transition: 0.3s;
+}
+
+input:checked + .slider .knob {
+    transform: translateX(30px);
+    background-color: black;  
+}
+
+.slider .knob{
+    background-color: #ccc;
+}
+
+
+input:checked + .slider .knob {
+    transform: translateX(30px);
+}
+
+input:checked + .slider .knob::before {
+    content: "🌙";
+    
+}
+.slider:before{
+    width: 0px;
+    height: 0px;
+}
 .app-root{
     display: flex;
     flex-direction: column;
@@ -192,13 +271,13 @@ onMounted(() => {
     font-weight: bold;
 }   
 .aside{
-   
+   display: flex;
+   flex-direction: column;
     width: 300px;
     flex-shrink: 0;
     border-right: 1px solid lightgray;
     align-items: center;
     background-color: white;
-    display: block;
     text-align: center; 
     overflow-y: auto;
     

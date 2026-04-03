@@ -160,6 +160,7 @@ loadProjects();
 <div>
     <div class="page-title">
     <h1>{{ pageTitle }}</h1>
+    
     <button class="title-btn" @click="openCreateModal">+ Создать проект</button>
     </div>
 
