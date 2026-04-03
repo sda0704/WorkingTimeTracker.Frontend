@@ -1,6 +1,28 @@
 <script setup lang="ts">
 
    import { RouterLink, RouterView } from 'vue-router';
+   import {ref, onMounted} from 'vue';
+
+   const isDarkMode = ref(false);
+
+   const toggleDarkMode = () => {
+    isDarkMode.value = !isDarkMode.value;
+    if(isDarkMode.value){
+        document.body.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+    }else{
+        document.body.classList.remove('dark');
+        localStorage.setItem('theme','light');
+    }
+   }
+    onMounted(() => {
+        const savedTheme = localStorage.getItem('theme');
+        if(savedTheme==='dark'){
+            isDarkMode.value = true;
+            document.body.classList.add('dark');
+        }
+    })
+   
 </script>
 
 <template>
@@ -9,7 +31,9 @@
 
 <img src="/images/timer-with-red-colour_78370-7250.jpg" alt="" class="header-logo">
 <p class="header-text">Учет рабочего времени</p>
-
+<button @click="toggleDarkMode" class="theme-toggle">
+    {{ isDarkMode ? '🌞' : '🌕'}}
+</button>
     </div>
     <div class="main-part">
 
@@ -41,7 +65,7 @@
 
 <style scoped>
 
-
+@import url(./assets/dark-theme.css);
 *{
     margin: 0;
     padding: 0;
@@ -52,6 +76,16 @@
     margin: 0;
     padding: 0;
 }
+
+.theme-toggle{
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    margin-left: auto;
+    margin-right: 20px;
+}
+
 .app-root{
     display: flex;
     flex-direction: column;

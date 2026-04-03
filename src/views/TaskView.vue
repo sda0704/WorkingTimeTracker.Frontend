@@ -1,8 +1,11 @@
 <script setup>
 
 
+
 import {ref} from 'vue';
-const editingTask = ref(null);
+
+
+const errorMessage = ref('');
 
 const showModal = ref(false);
 const modalMode = ref('create');
@@ -16,6 +19,7 @@ const editingId = ref(null);
 
 
 const openCreateModal = () => {
+    errorMessage.value = '';
     modalMode.value = 'create';
     formData.value = {title: '', isActive: true, projectId: ''};
     editingId.value = null;
@@ -23,6 +27,7 @@ const openCreateModal = () => {
 }
 
 const openEditModal = (task) => {
+    errorMessage.value = '';
     modalMode.value = 'edit';
     formData.value = {...task};
     editingId.value = task.id;
@@ -30,6 +35,16 @@ const openEditModal = (task) => {
 }
 
 const saveTask = async () => {
+
+    if(!formData.value.title){
+        errorMessage.value = "Название не может быть пустым";
+        return;
+    }
+    if(!formData.value.projectId){
+        errorMessage.value = "Выберите проект";
+        return;
+    }
+
     if(modalMode.value === 'create'){
         await createTask(formData.value);
     }
@@ -75,13 +90,22 @@ const createTask = async(data) => {
             },
             body: JSON.stringify(data)
         });
-        if(!response.ok) {throw new Error(`HTTP ${response.status}`)}
+        if(!response.ok) {
+            let errorText = await response.text();
+            try{
+                const errorJson = await JSON.parse(errorText);
+                errorText = errorJson.message || errorText;
+            }catch(e){
+
+            }
+            throw new Error(errorText);
+        }
         const createdTask = await response.json();
         tasks.value.push(createdTask);
-        console.log("Задача создана")
+        
     }
     catch(error){
-        console.log("Ошибка:", error.message);
+      throw error;  
     }
 };
 
@@ -187,6 +211,8 @@ const getProjectTitle = (projectId) => {
     <div class="modal">
         <h3 class="modal-title">{{ modalMode === 'create' ? 'Создать задачу' : 'Редактировать задачу' }}</h3>
 
+        <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
+
         <input v-model="formData.title" placeholder="Название задачи" class="modal-input">
        
                  <div class="custom-select">
@@ -220,6 +246,8 @@ const getProjectTitle = (projectId) => {
 </template>
 
 <style>
+
+
 @font-face{
     font-family: "Comfortaa";
     src: local("Comfortaa-Regular"),
@@ -227,7 +255,19 @@ const getProjectTitle = (projectId) => {
     font-weight: normal;
 }
 
+
+.error-message{
+    background-color: #f8d7da;
+      font-family: "Comfortaa", sans-serif;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 8px;
+    margin: 10px 15px ;
+    border: 1px solid #f5c6cb;
+    font-size: 14px;
+}
 /* page-title */
+
 
 .page-title{
     display: flex;
@@ -311,9 +351,8 @@ const getProjectTitle = (projectId) => {
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    max-width: 500px;
-    max-height: 270px;
-    height: 100%;
+    max-width: 500px;   
+     height: auto;
     width: 90%;
     position: relative;
     animation: modalFadeIn 0.3s ease-out;

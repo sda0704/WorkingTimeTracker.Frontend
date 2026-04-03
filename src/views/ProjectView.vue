@@ -1,9 +1,10 @@
 <script setup>
+
 import {ref } from 'vue';
 
 
 
-const ErrorMessage = ref('');
+const errorMessage = ref('');
 
 const showModal = ref(false);
 const modalMode = ref('create');
@@ -17,6 +18,7 @@ const editingId = ref(null)
 
 
 const openCreateModal = () => {
+    errorMessage.value = '';
     modalMode.value = 'create';
     formData.value = {title: '', code: '', isActive: true};
     editingId.value = null;
@@ -24,6 +26,7 @@ const openCreateModal = () => {
 }
 
 const openEditModal = (project) => {
+    errorMessage.value = '';
     modalMode.value = 'edit';
     formData.value = {...project}
     editingId.value = project.id;
@@ -32,6 +35,14 @@ const openEditModal = (project) => {
 }
 
 const saveProject = async () => {
+    if(!formData.value.title){
+        errorMessage.value = "Название проекта не может быть пустым";
+        return;
+    }
+    if(!formData.value.code){
+        errorMessage.value = "Код не может быть пустым";
+        return;
+    }
     if(modalMode.value === 'create'){
         await createProjects(formData.value);
     } else{
@@ -66,10 +77,17 @@ catch(error){
                 method: 'POST',
                 headers: {
                     'Content-Type': "application/json"
-                },
+                },  
                 body: JSON.stringify(data)
             });
-            if(!response.ok){throw new Error(`HTTP ${response.status}`)};
+            if(!response.ok){
+                let errorText = await response.text();
+                try{
+                    const errorJson = await JSON.parse(errorText);
+                    errorText = errorJson.message || errorText;
+                    }catch(e){}
+                    throw new Error(errorText);
+            };
             const createdProject = await response.json();
 
             projects.value.push(createdProject);
@@ -79,7 +97,7 @@ catch(error){
 
         }
         catch(error){
-            console.log("Ошибка:", error.message)
+          return error;
         }
     }
 
@@ -99,7 +117,14 @@ catch(error){
                 },
                 body: JSON.stringify(data)
             });
-              if(!response.ok){throw new Error(`HTTP ${response.status}`)};
+              if(!response.ok){
+                let errorText = await response.json();
+                try{
+                    const errorJson = JSON.parse(errorText);
+                    errorText = errorJson.message || errorText;
+                }catch(e){}
+                throw new Error(errorText);
+              };
               const index = projects.value.findIndex(p => p.id ===id);
               if(index !== -1){
                 projects.value[index] = {...data, id};
@@ -108,7 +133,7 @@ catch(error){
               console.log("Проект обновлен!");
             }
             catch(error){
-                console.log("Ошибка:", error.message);
+                throw error;
             }
     }
     const deleteProjects = async (id) => {
@@ -165,6 +190,7 @@ loadProjects();
 <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
     <div class="modal">
         <h3 class="modal-title">{{ modalMode === 'create' ? 'Создать проект' : 'Редактировать проект' }}</h3>
+        <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
 
         <input v-model="formData.title" placeholder="Название" class="modal-input">
         <input v-model="formData.code" placeholder="Код" class="modal-input">
@@ -192,7 +218,16 @@ loadProjects();
     font-weight: normal;
 }
 
-
+.error-message{
+    background-color: #f8d7da;
+      font-family: "Comfortaa", sans-serif;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 8px;
+    margin: 10px 15px ;
+    border: 1px solid #f5c6cb;
+    font-size: 14px;
+}
 
 .modal{
     position: fixed;       
@@ -202,8 +237,7 @@ loadProjects();
     border-radius: 8px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     max-width: 500px;
-    max-height: 270px;
-    height: 100%;
+    height: auto;
     width: 90%;
     position: relative;
     animation: modalFadeIn 0.3s ease-out;

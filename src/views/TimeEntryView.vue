@@ -1,10 +1,12 @@
 <script setup> 
 
 
-
+import {watch} from 'vue';
 import {ref} from 'vue';
 
+   
 
+    const modalDailySummary = ref(null)
     const errorMessage = ref('');
     const showModal = ref(false);
     const modalMode = ref('create');
@@ -33,8 +35,24 @@ import {ref} from 'vue';
         formData.value = {...timeEntry};
         editingId.value = timeEntry.id;
         showModal.value = true;
+
+        if(timeEntry.date){
+            const dateOnly = timeEntry.date.split('T')[0];
+            loadModalDailySummary(dateOnly);
+        }
     }
 
+
+    const loadModalDailySummary = async (date) => {
+        if(!date) return
+        try{
+           const response = await fetch(`https://localhost:7222/api/timeentry/summary/daily?date=${date}`);
+            if(!response.ok) throw new Error(`HTTP ${response.status}`);
+            modalDailySummary.value = await response.json();
+        } catch(error){
+            modalDailySummary.value = null;
+        }
+    }
 
     const isTaskDropdownOpen = ref(false);
     const selectedTaskName = ref('Выберите задачу');
@@ -170,7 +188,7 @@ import {ref} from 'vue';
         if(!response.ok){
             let errorText = await response.text();
             try{
-                const errorJson = await JSON.parse(errorText);
+                const errorJson = JSON.parse(errorText);
                 errorText = errorJson.message || errorText;
             }catch(e){
                
@@ -286,7 +304,11 @@ import {ref} from 'vue';
         loadTimeEntriesWithFilter();
     }
 
-
+ watch(() => formData.value.date, (newDate) => {
+        if(newDate){
+            loadModalDailySummary(newDate);
+        }
+    });
 </script>
 
 <template>
@@ -363,7 +385,7 @@ import {ref} from 'vue';
            
              
              <input v-model="formData.hours" type="text" name="" id="" class="modal-input" placeholder="Кол-во часов">
-             <p class="modal-text">Уже спиcано за {{ getTodaysDate() }}: {{ dailySummary.totalHours }} часов</p>
+             <p class="modal-text">Уже спиcано за {{formData.date}}: {{modalDailySummary?.totalHours  || 0}} ч. </p>
 
              <input type="text" v-model="formData.description" class="modal-input" placeholder="Описание">
             
@@ -387,15 +409,6 @@ import {ref} from 'vue';
 <style scoped>
 
 
-.error-message{
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 10px;
-    border-radius: 8px;
-    margin: 10px 15px ;
-    border: 1px solid #f5c6cb;
-    font-size: 14px;
-}
 
 @font-face{
     font-family: "Comfortaa";
@@ -404,6 +417,17 @@ import {ref} from 'vue';
     font-weight: normal;
 }
 
+
+.error-message{
+    background-color: #f8d7da;
+    color: #721c24;
+     font-family: "Comfortaa", sans-serif;
+    padding: 10px;
+    border-radius: 8px;
+    margin: 10px 15px ;
+    border: 1px solid #f5c6cb;
+    font-size: 14px;
+}
 /* modal */
 
 .modal{
@@ -414,8 +438,8 @@ import {ref} from 'vue';
     border-radius: 8px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     max-width: 500px;
-    max-height: 450px;
-    height: 100%;
+   
+    height: auto;
     width: 90%;
     position: relative;
     animation: modalFadeIn 0.3s ease-out;
@@ -438,7 +462,7 @@ to{
       font-family: "Comfortaa", sans-serif;
     padding-left: 20px;
     
-    height: 9%;
+    height: 45px;
     border-radius: 15px;
     border: 2px solid rgb(233, 233, 233);
     background-color: rgb(235, 235, 235);

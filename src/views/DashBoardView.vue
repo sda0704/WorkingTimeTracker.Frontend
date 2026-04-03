@@ -212,6 +212,10 @@ catch(error){
 
 
 <style>
+
+
+@import url(../assets/dark-theme.css);
+
 @font-face{
     font-family: "Comfortaa";
     src: local("Comfortaa-Regular"),
@@ -384,9 +388,18 @@ catch(error){
 
 }
 
-.yellow { background: #fff3cd; }
-.green { background: #d4edda; }
-.red { background: #f8d7da; }
+.yellow { 
+    background: #fff3cd; 
+    border: 1px solid #f7db7e;
+
+}
+.green { 
+    background: #d4edda; 
+    border: 1px solid #5bee7d;
+}
+.red { 
+    background: #f8d7da; 
+    border: 1px solid #f5959d;}
 .gray { border: 1px solid lightgray; }
 
 </style>

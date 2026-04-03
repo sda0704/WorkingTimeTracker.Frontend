@@ -1,0 +1,28 @@
+body.dark .aside{
+    background-color: lightgray;
+}
+body.dark .calendar-cell{
+    background-color: black;
+    color: white;
+}
+body.dark .yellow { 
+    background: #fff3cd; 
+    border: 1px solid #f7db7e;
+
+}
+body.dark .green { 
+    background: #d4edda; 
+    border: 1px solid #5bee7d;
+}
+body.dark .red { 
+    background: #f8d7da; 
+    border: 1px solid #f5959d;}
+body.dark .gray { border: 1px solid lightgray; }
+
+body.dark .calendar-grid{
+    background-color: black;
+}
+
+body.dark .dashboard{
+    background-color: black;
+}
