@@ -1,28 +1,181 @@
+body.dark {
+    background-color:rgb(29, 29, 29); 
+}
 body.dark .aside{
-    background-color: lightgray;
+  background-color: rgb(29, 29, 29);    
 }
 body.dark .calendar-cell{
-    background-color: black;
+    background-color:rgb(29, 29, 29);
     color: white;
 }
 body.dark .yellow { 
-    background: #fff3cd; 
-    border: 1px solid #f7db7e;
+    background: rgb(67, 32, 4); 
+    border: 1px solid rgb(166, 95, 0);
 
 }
 body.dark .green { 
-    background: #d4edda; 
-    border: 1px solid #5bee7d;
+    background: rgb(3, 46, 21); 
+    border: 1px solid rgb(0, 130, 54);
 }
 body.dark .red { 
-    background: #f8d7da; 
-    border: 1px solid #f5959d;}
-body.dark .gray { border: 1px solid lightgray; }
+    background: rgb(70, 8, 9); 
+    border: 1px solid rgb(193, 0, 7)}
+body.dark .gray { border: 1px solid rgb(73, 73, 73); }
+
+
+body.dark .tip-yellow{
+       background: rgb(67, 32, 4); 
+    border: 1px solid rgb(166, 95, 0);
+}
+
+body.dark .tip-red{
+    background: rgb(70, 8, 9); 
+    border: 1px solid rgb(193, 0, 7)
+}
+body.dark .tip-green{
+    background: rgb(3, 46, 21); 
+    border: 1px solid rgb(0, 130, 54);
+}
+
 
 body.dark .calendar-grid{
-    background-color: black;
+    background-color: rgb(29, 29, 29);
 }
 
 body.dark .dashboard{
-    background-color: black;
+    background-color:rgb(29, 29, 29);
 }
+
+
+body.dark .aside-btn{
+    background-color: rgb(29, 29, 29);
+    color: white;
+    
+}
+body.dark .aside-btn:hover{
+    background-color: lightgray;
+}
+
+body.dark .header{
+    background-color: rgb(29, 29, 29);
+}
+body.dark .toggle-aside{
+    color: white;
+}
+body.dark .header-text{
+    color: white;
+}
+body.dark .dateTime{
+    color: white;
+}
+
+body.dark .content{
+    background-color: rgb(29, 29, 29);
+}
+
+body.dark h1{
+    color: white;
+}
+body.dark h3{
+    color: white;
+}
+body.dark h2{
+    color: white;
+}
+
+body.dark .stats-by-month{
+      background-color: rgb(29, 29, 29);
+      color: white;
+}
+body.dark .avg-by-month{
+     background-color: rgb(29, 29, 29);
+      color: white;
+}
+body.dark .active-projects{
+     background-color: rgb(29, 29, 29);
+      color: white;
+}
+
+body.dark .month-button{
+    background-color: rgb(29, 29, 29);
+      color: white;
+      transition: background-color 0,3s;
+}
+body.dark .month-button:hover{
+    background-color: darkgray;
+}
+
+body.dark .weekday{
+     background-color: rgb(29, 29, 29);
+      color: white;
+      border: 2px solid white;
+}
+
+body.dark .projects-list{
+    background-color: rgb(29, 29, 29);
+      color: white;
+}
+body.dark .tasks-list {
+    background-color: rgb(29, 29, 29);
+      color: white;
+}
+
+body.dark .timeEntry-list{
+    background-color: rgb(29, 29, 29);
+      color: white;
+}
+
+body.dark .title-button{
+     background-color: lightgray;
+      color: black;
+      transition: background-color 0,3s;
+}
+body.dark .title-button:hover{
+    background-color: darkgray;
+}
+
+body.dark .modal{
+     background-color: rgb(29, 29, 29);
+      color: white;
+}
+body.dark .modal-input{
+      background-color: rgb(29, 29, 29);
+      color: white;
+      border: 1px solid darkgray;
+}
+
+body.dark .modal-button{
+     background-color: rgb(29, 29, 29);
+      color: white;
+      transition: background-color 0.3s;
+}
+body.dark .modal-button:hover{
+    background-color: darkgray;
+}
+
+body.dark .custom-select{
+     background-color: rgb(29, 29, 29);
+      color: white;
+}
+body.dark .select-button{
+     background-color: rgb(29, 29, 29);
+      color: white;
+      border: 1px solid darkgray;
+}
+
+body.dark .dropdown-list{
+     background-color: rgb(29, 29, 29);
+      color: white;
+       border: 1px solid darkgray;
+       border-top: 0;
+}
+body.dark .modal-date{
+    background-color: rgb(29, 29, 29);
+      color: white;
+      border: 1px solid darkgray;
+      color-scheme: dark;
+}
+body.dark .router-link-active{
+    background-color: rgb(111, 71, 253);
+}
+

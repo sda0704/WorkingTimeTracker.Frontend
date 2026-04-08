@@ -161,7 +161,7 @@ loadProjects();
     <div class="page-title">
     <h1>{{ pageTitle }}</h1>
     
-    <button class="title-btn" @click="openCreateModal">+ Создать проект</button>
+    <button class="title-button" @click="openCreateModal">+ Создать проект</button>
     </div>
 
     
@@ -193,8 +193,8 @@ loadProjects();
         <h3 class="modal-title">{{ modalMode === 'create' ? 'Создать проект' : 'Редактировать проект' }}</h3>
         <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
 
-        <input v-model="formData.title" placeholder="Название" class="modal-input">
-        <input v-model="formData.code" placeholder="Код" class="modal-input">
+        <input maxlength="50" v-model="formData.title" placeholder="Название" class="modal-input">
+        <input  maxlength="30" v-model="formData.code" placeholder="Код" class="modal-input">
     <label class="switch">
         <input class="checkbox" type="checkbox" v-model="formData.isActive">
         <span class="slider"></span>
@@ -392,7 +392,7 @@ input:checked + .slider:before{
 
 }
 .projects-items:last-child{
-    margin-bottom: 30px;
+    border-bottom: 0;
 }
 .table-title{
     margin-left: 30px;
@@ -407,6 +407,7 @@ input:checked + .slider:before{
     grid-template-columns:800px  300px  300px  30px 30px;
     border-bottom: 1px solid #f5f5f5;
 }
+
 .project-text:first-child{
     margin-left: 30px;
 }

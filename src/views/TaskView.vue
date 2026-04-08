@@ -213,7 +213,7 @@ const getProjectTitle = (projectId) => {
 
         <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
 
-        <input v-model="formData.title" placeholder="Название задачи" class="modal-input">
+        <input maxlength="60" v-model="formData.title" placeholder="Название задачи" class="modal-input">
        
                  <div class="custom-select">
                    
@@ -320,7 +320,8 @@ const getProjectTitle = (projectId) => {
     margin-top: 10px;
 }
 .tasks-items:last-child{
-    margin-bottom: 30px;
+    margin-bottom: 10px;
+    border-bottom: 0;
 }
 .tasks-items:first-child{
     margin-left: 30px;

@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import StartView from '@/views/StartView.vue';
 import ProjectView from '@/views/ProjectView.vue';
 import TaskView from '@/views/TaskView.vue';
 import TimeEntryView from '@/views/TimeEntryView.vue';
@@ -6,6 +7,11 @@ import DashBoardView from '@/views/DashBoardView.vue';
 
 
 const routes = [
+  {
+    path: '/',
+    name: 'start',
+    component: StartView
+  },
   {
     path: '/dashboard',
     name: 'dashboard',

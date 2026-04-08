@@ -4,6 +4,7 @@
 import {watch} from 'vue';
 import {ref} from 'vue';
 
+
    
 
     const modalDailySummary = ref(null)
@@ -203,7 +204,7 @@ import {ref} from 'vue';
     }
         }
 
-
+      
  
 
     const updateTimeEntry = async(id, data) => {
@@ -328,7 +329,8 @@ import {ref} from 'vue';
     <div class="filter">
 
         <button class="filter-button" @click="setFilterAll()">Все время</button>
-        <button class="filter-button" @click="setFilterDay()">За день</button>
+        <!-- <button class="filter-button" @click="setFilterDay()">За день <input type="date"></button> -->
+         <input type="date" class="filter-button" placeholder="За день" >
         <button class="filter-button" @click="setFilterMonth()">За месяц</button>
     </div>
 
@@ -694,6 +696,9 @@ input[type="date"]::-webkit-outer-spin-button {
     display: grid;
     grid-template-columns: 150px 300px 400px 350px 200px 30px 30px;
     border-bottom: 1px solid rgb(228, 228, 228);
+}
+.timeEntry-items:last-child{
+    border-bottom: none;
 }
 .timeEntry-button{
   width: 40px;
