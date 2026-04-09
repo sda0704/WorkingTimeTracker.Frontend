@@ -4,7 +4,6 @@
 import {watch} from 'vue';
 import {ref} from 'vue';
 
-
    
 
     const modalDailySummary = ref(null)
@@ -43,6 +42,9 @@ import {ref} from 'vue';
         }
     }
 
+   
+    
+    
 
     const loadModalDailySummary = async (date) => {
         if(!date) return
@@ -95,6 +97,18 @@ import {ref} from 'vue';
          hours: parseFloat(formData.value.hours),
          description: formData.value.description
         };
+      
+        if(modalMode.value === 'edit' && editingId.value){
+            const oldTimeEntry = timeEntries.value.find(t => t.id === editingId.value);
+            if(oldTimeEntry && oldTimeEntry.taskId !== formData.value.taskId){
+                const oldTask = tasks.value.find(t => t.id === oldTimeEntry.taskId);
+                if(oldTask && !oldTask.isActive){
+                    errorMessage.value = 'Нельзя сменить задачу, так как она неактивна';
+                    return;
+                }
+            }
+        }
+
         try{
         if (modalMode.value === 'create'){
             await createTimeEntry(dataToSend);
@@ -138,6 +152,9 @@ import {ref} from 'vue';
     const getTaskProjectId = (taskId) => {
         const task = tasks.value.find(t => t.id === taskId);
         return taskId ? task.projectId : null;
+   
+   
+        
     };
 
 
@@ -296,7 +313,7 @@ import {ref} from 'vue';
     }
     const setFilterDay = () => {
         currentFilter.value = 'day';
-        filterDate.value = new Date().toISOString().split('T')[0];
+        
         loadTimeEntriesWithFilter();
     }
     const setFilterMonth = () => {
@@ -329,11 +346,16 @@ import {ref} from 'vue';
     <div class="filter">
 
         <button class="filter-button" @click="setFilterAll()">Все время</button>
-        <!-- <button class="filter-button" @click="setFilterDay()">За день <input type="date"></button> -->
-         <input type="date" class="filter-button" placeholder="За день" >
         <button class="filter-button" @click="setFilterMonth()">За месяц</button>
+
+      
     </div>
 
+  <div class="date-filer-wrapper">
+      <label class="date-label">
+          <input type="date" v-model="filterDate" @change="setFilterDay" class="date-filter">
+          </label>
+  </div>
     <div class="timeEntry-table">
         <p class="timeEntry-table-text">Дата</p>
         <p class="timeEntry-table-text">Задача</p>
@@ -642,6 +664,10 @@ input[type="date"]::-webkit-outer-spin-button {
 
 /* filter */
 
+.date-filer{
+    
+}
+
 .filter-button{
     height: 30px;
       font-family: "Comfortaa", sans-serif;
@@ -665,11 +691,38 @@ input[type="date"]::-webkit-outer-spin-button {
     border-bottom-right-radius: 15px;
 }
 
+.date-filer-wrapper{
+    margin-left: 30px;
+}
+
+/* СДЕЛАТЬ */
+.date-filter {
+    
+    font-size: 15px;
+    margin-left: 10px;
+      font-family: "Comfortaa", sans-serif;
+    padding-left: 20px;
+
+    height: 45px;
+    border-radius: 15px;
+    border: 2px solid rgb(233, 233, 233);
+    background-color: rgb(235, 235, 235);
+    margin-bottom: 20px;
+}
+
+.date-filter::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+   
+}
+
 .title-button{
 
     font-size: 19px;
       font-family: "Comfortaa", sans-serif;
 }
+
 
 .timeEntry-list{
     border: 2px solid lightgray;
@@ -682,7 +735,7 @@ input[type="date"]::-webkit-outer-spin-button {
 .timeEntry-table{
     display: grid;
     grid-template-columns: 150px 300px 400px 350px 200px 200px;
-    border-bottom: 1px solid lightgray;
+    border-bottom: 1px solid rgb(226, 226, 226);
 }
 .timeEntry-table-text:first-child{
     margin-left: 30px;

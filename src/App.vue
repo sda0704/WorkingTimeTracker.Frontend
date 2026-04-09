@@ -27,9 +27,9 @@ import { useRoute, RouterView } from 'vue-router';
    const timeentryIcon = computed (() => {
         return isDarkMode.value ? "/images/time-dark.svg" : "/images/time.svg";
    });
-
+   
     const headerLogoIcon = computed(() => {
-        return isDarkMode.value ? "/images/clock.svg" : "/images/clock.svg";
+        return isDarkMode.value ? "/images/clock_dark.svg" : "/images/clock.svg";
     });
    
     const getMoscowTime = () => {
@@ -111,12 +111,14 @@ const toggleAside = () => {
 
 </script>
 
+
+
 <template>
 
 <div class="app-root">
    <div class="header">
 <button class="toggle-aside" @click="toggleAside()"  >{{ isAsideHidden ? '☰' : '✖' }}</button>
-<img :src="headerLogoIcon" alt="" class="header-logo">
+<img :src="headerLogoIcon" alt="не работает" class="header-logo">
 <p class="header-text">Учет рабочего времени</p>
 
 <p class="dateTime">{{ MoscowTime}}  {{ MoscowDate }}</p>
