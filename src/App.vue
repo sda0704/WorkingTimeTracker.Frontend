@@ -11,8 +11,7 @@ import { useRoute, RouterView } from 'vue-router';
    const MoscowTime = ref('');
    const MoscowDate = ref('');
 
-   const route = useRoute();
-    const isStartPage = computed(() => route.path === '/')
+   
 
 
    const dashboardIcon = computed(() => {
@@ -27,9 +26,9 @@ import { useRoute, RouterView } from 'vue-router';
    const timeentryIcon = computed (() => {
         return isDarkMode.value ? "/images/time-dark.svg" : "/images/time.svg";
    });
-   
+
     const headerLogoIcon = computed(() => {
-        return isDarkMode.value ? "/images/clock_dark.svg" : "/images/clock.svg";
+        return isDarkMode.value ? "/images/clock.svg" : "/images/clock.svg";
     });
    
     const getMoscowTime = () => {
@@ -111,16 +110,17 @@ const toggleAside = () => {
 
 </script>
 
-
-
 <template>
 
 <div class="app-root">
    <div class="header">
 <button class="toggle-aside" @click="toggleAside()"  >{{ isAsideHidden ? '☰' : '✖' }}</button>
-<img :src="headerLogoIcon" alt="не работает" class="header-logo">
+<img :src="headerLogoIcon" alt="" class="header-logo">
 <p class="header-text">Учет рабочего времени</p>
-
+<div class="gitLink">
+    <a href="https://github.com/sda0704/WorkingTimeTracker.API.Final"><img src="../images/github.svg" alt="" class="github-Icon"></a>
+    <a href="https://github.com/sda0704/WorkingTimeTracker.API.Final">GitHub</a>
+</div>
 <p class="dateTime">{{ MoscowTime}}  {{ MoscowDate }}</p>
 
     </div>
@@ -151,6 +151,7 @@ const toggleAside = () => {
 </label>
         
    
+    
     </div>
   <main class="content">
     <RouterView />
@@ -185,10 +186,29 @@ const toggleAside = () => {
     font-weight: normal;
 }
 
-
+.github-Icon{
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border-radius: 15px;
+    margin-right: 10px;
+}
+.gitLink{
+    margin-left: auto;
+    margin-right: 30px;
+    display: flex;
+    align-items: center;
+    font-size: 23px;
+    font-family: "Comfortaa", sans-serif;
+   
+}
+a{
+     text-decoration: none; 
+     color: black;
+}
 
 .dateTime{
-      margin-left: auto;
+     
     margin-right: 20px;
   font-family: "Comfortaa", sans-serif;
   font-weight: bold;

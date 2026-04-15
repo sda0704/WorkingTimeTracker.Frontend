@@ -420,7 +420,7 @@ to{
     outline-color:  gray;
 }
 
-/* ПОДУМАТЬ НАД СТИЛИЗАЦИЕЙ */
+
 .modal-selector{
      width: 95%;
     height: 40px;

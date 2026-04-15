@@ -66,7 +66,7 @@ import {ref} from 'vue';
         isTaskDropdownOpen.value = false
     }
 
-    const editingTimeEntry = ref(null);
+   
     const tasks = ref([]);
     const projects = ref([]);
 
@@ -87,6 +87,10 @@ import {ref} from 'vue';
         }
        if(!formData.value.description){
             errorMessage.value = "Описание не может быть пустым";
+            return;
+        }
+        if(!formData.value.taskId){
+            errorMessage.value = "Выберите задачу";
             return;
         }
 
@@ -186,12 +190,7 @@ import {ref} from 'vue';
 
     loadDailySummary();
 
-    const newTimeEntry = ref({
-        taskId: '',
-        date: '',
-        hours: '',
-        description: ''
-    })
+   
     const createTimeEntry = async (data)=>{
         try{
       
@@ -273,16 +272,6 @@ import {ref} from 'vue';
         }
     }
 
-    const getTodaysDate = () => {
-        let today = new Date();
-    let dd = String(today.getDate()).padStart(2, '0');
-    let mm = String(today.getMonth() + 1).padStart(2, '0'); 
-    let yyyy = today.getFullYear();
-
-    today = dd + '.' + mm + '.' + yyyy;
-        return (today);
-    }
-
 
     const currentFilter = ref('all');
     const filterDate = ref(new Date().toISOString().split('T')[0]);
@@ -342,7 +331,7 @@ import {ref} from 'vue';
     <div class="timeEntry-list">
         <p class="table-title"> Список проводок</p>
     
-
+<div class="filter-wrapper">
     <div class="filter">
 
         <button class="filter-button" @click="setFilterAll()">Все время</button>
@@ -355,6 +344,7 @@ import {ref} from 'vue';
       <label class="date-label">
           <input type="date" v-model="filterDate" @change="setFilterDay" class="date-filter">
           </label>
+  </div>
   </div>
     <div class="timeEntry-table">
         <p class="timeEntry-table-text">Дата</p>
@@ -491,14 +481,6 @@ to{
     border: 2px solid rgb(233, 233, 233);
     background-color: rgb(235, 235, 235);
     margin-bottom: 20px;
-}
-
-input[type="date"]::-webkit-calendar-picker-indicator,
-input[type="date"]::-webkit-inner-spin-button,
-input[type="date"]::-webkit-outer-spin-button {
-    /* Подумать как переделать!!! */
-    padding-right: 75%;
-    
 }
 
 
@@ -690,30 +672,38 @@ input[type="date"]::-webkit-outer-spin-button {
     border-top-right-radius: 15px;
     border-bottom-right-radius: 15px;
 }
-
-.date-filer-wrapper{
-    margin-left: 30px;
+.filter-wrapper{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-/* СДЕЛАТЬ */
+
+.date-filer-wrapper{
+    margin-right: 30px;
+}
+
+
 .date-filter {
     
     font-size: 15px;
-    margin-left: 10px;
+   
       font-family: "Comfortaa", sans-serif;
     padding-left: 20px;
-
+    padding-right: 10px;
     height: 45px;
     border-radius: 15px;
     border: 2px solid rgb(233, 233, 233);
-    background-color: rgb(235, 235, 235);
     margin-bottom: 20px;
+   
 }
+
+
 
 .date-filter::-webkit-calendar-picker-indicator {
     cursor: pointer;
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
    
 }
 

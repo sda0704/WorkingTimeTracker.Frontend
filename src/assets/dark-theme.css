@@ -179,3 +179,11 @@ body.dark .router-link-active{
     background-color: rgb(111, 71, 253);
 }
 
+body.dark .date-filter{
+      color-scheme: dark;
+}
+
+body.dark a{
+    color: white;
+    
+}
