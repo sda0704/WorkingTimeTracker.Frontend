@@ -1,5 +1,21 @@
 # workingtime-frontend
 
+**Backend https://github.com/sda0704/WorkingTimeTracker.API**
+
+
+## Структура проекта  
+
+src/  
+-assets/ Стили, темы  
+-fonts/ Шрифты  
+-router/ Маршрутизация  
+-views / #Страницы  
+--ProjectsView.vue  
+--TaskView.vue  
+--TimeEntryView.vue  
+-AppView.vue #главный компонент (хедер, сайдбар)  
+-main.js #точка входа  
+
 This template should help get you started developing with Vue 3 in Vite.
 
 ## Recommended IDE Setup
